@@ -1,0 +1,19 @@
+services:
+  mongo:
+    image: mongo:8
+    volumes:
+      - finance_mongo:/data/db
+  app:
+    build: .
+    ports:
+      - "127.0.0.1:8501:8501"
+    environment:
+      STORAGE_BACKEND: mongodb
+      MONGO_URI: mongodb://mongo:27017
+      MONGO_DB: personal_finance
+      JWT_SECRET: ${JWT_SECRET:?Set JWT_SECRET in .env}
+    depends_on:
+      - mongo
+    restart: on-failure
+volumes:
+  finance_mongo:
